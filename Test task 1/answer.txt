@@ -1,0 +1,9 @@
+A good starting point for evaluation effectiveness of a ranking system is tracking its **success rate** by calculating what percentage of sessions ended in users finding what they were looking for. 
+
+When displayed before a user, search results are ordered by assumed relevance. The **ranking of items** that users end up selecting is a good indicator of the model's performance, with better models ranking relevant results higher more frequently. If estimated relevance scores were assigned to ranked items, they should be reevaluated to better match future queries and learned user preferences. 
+
+It is desirable that the user finds what they are looking for as fast as possible, and with as few attempts as possible. To gain insight into this domain of user experience, we need to keep track of the **number of queries** within a successful session and **elapsed time** within one. Changes in query length throughout a session might also be worth paying attention to. 
+
+Unlike in ranking systems within streaming or e-commerce platforms, explicit feedback in the form of reviews isn’t available, hence, experimenting with **inferred feedback** would have to suffice (e.g., tracking interactions with retrieved items, checking whether similar searches followed after the selection of a result). 
+
+Presuming that online testing was primarily conducted in an A/B format, experimenting with **interleaved online testing**, in hopes of [significantly reducing time and traffic necessary for assessment](https://doi.org/10.1145/3543873.3587572), might expedite improvements.
