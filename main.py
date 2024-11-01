@@ -1,12 +1,15 @@
+import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 import json
 import csv
 
+from constants import *
+
 def create_dataframe():
     timestamp, device_id, experiment_group, session_id, query_length, selected_id, query_id, query_outcome  = [], [], [], [], [], [], [], []
     
-    with open('2024InternshipData.csv', 'r') as csvfile: 
+    with open(INPUT_DATA_FILE, 'r') as csvfile: 
         data = csv.reader(csvfile, delimiter=',')
         for row in data:
             try:
@@ -74,7 +77,6 @@ def analyze_group(df):
             elapsed_time_before_success = session_data['timestamp'].iloc[-1] - session_data['timestamp'].iloc[0]
             elapsed_time_before_success_list.append(elapsed_time_before_success)
             
-            print("_____________________________________")
             # Query length difference
             query_length_diff = (session_data['query_length'].iloc[0] / session_data['query_length'].iloc[-1]) * 100 if session_data['query_length'].iloc[-1]>0 else 0
             query_length_diff_list.append(query_length_diff)
@@ -109,7 +111,39 @@ if __name__ == "__main__":
     group_0_results = analyze_group(group_0)
     group_1_results = analyze_group(group_1)
     
-    with open('results.txt', 'w') as file:
+    metrics = list(group_0_results.keys())[1:]  # Skip the "id"
+    group_0_values = [group_0_results[metric] for metric in metrics]
+    group_1_values = [group_1_results[metric] for metric in metrics]
+
+    num_metrics = len(metrics)
+
+    # Create subplots
+    fig, axs = plt.subplots(num_metrics, 1, figsize=(8, 2 * num_metrics), constrained_layout=True)
+    plt.title("performance_comparioson")
+
+    # Plot each metric in a separate subplot
+    for i, metric in enumerate(metrics):
+        # Histogram data for the current metric
+        data = [group_0_values[i], group_1_values[i]]
+        labels = [metric + '_0', metric + '_1']
+        colors = ['blue', 'orange']
+
+        # Plot histogram for each dictionary's value as side-by-side bars
+        axs[i].bar(labels, data, color=colors)
+        
+        # Set titles and labels
+        axs[i].set_title(metric)
+        axs[i].set_ylabel('Value')
+        
+        # Display value on top of bars
+        for j, value in enumerate(data):
+            axs[i].text(j, value + 0.1, f'{value:.2f}', ha='center', va='bottom')
+    
+    plt.savefig(PLOT_OUTPUT_FILE, format="pdf", dpi=300, bbox_inches='tight')
+    # Show plot
+    plt.show()
+    
+    with open(REPORT_OUTPUT_FILE, 'w') as file:
         file.write("Group 0: \n")
         file.write("Percentage of successful sessions: " + str(group_0_results['success_percentage']) + "\n")
         file.write("Average number of querys before success: " + str(group_0_results['avg_querys_before_success']) + "\n")
@@ -123,4 +157,3 @@ if __name__ == "__main__":
         file.write("Average elapsed time in session before success: " + str(group_1_results['avg_elapsed_time_before_success']) + "\n")
         file.write("Average difference in query length between first and last query (in successful sessions): " + str(group_1_results['avg_query_length_diff']) + "\n")
         file.write("Average ranking of selected option: " + str(group_1_results['avg_choice_rank']) + "\n")
-    
