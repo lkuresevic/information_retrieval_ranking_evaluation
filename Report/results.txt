@@ -1,12 +1,12 @@
 Group 0: 
 Percentage of successful sessions: 57.34409190371991
 Average number of querys before success: 6.963510612926306
-Average elapsed time in session before success: 25683.476557725488
+Average elapsed time in session before success: 25.683476557725488
 Average difference in query length between first and last query (in successful sessions): 128.269799972624
 Average ranking of selected option: 6.436680181254472
 Group 1: 
 Percentage of successful sessions: 56.440572495332916
 Average number of querys before success: 6.939140022050717
-Average elapsed time in session before success: 25511.40870906405
+Average elapsed time in session before success: 25.51140870906405
 Average difference in query length between first and last query (in successful sessions): 130.41875090571142
 Average ranking of selected option: 5.338037486218302

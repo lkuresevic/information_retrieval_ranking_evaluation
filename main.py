@@ -7,8 +7,10 @@ import csv
 from constants import *
 
 def create_dataframe():
+    # Crete a list for every field within the .csv
     timestamp, device_id, experiment_group, session_id, query_length, selected_id, query_id, query_outcome  = [], [], [], [], [], [], [], []
     
+    # Open the .csv file and extract data
     with open(INPUT_DATA_FILE, 'r') as csvfile: 
         data = csv.reader(csvfile, delimiter=',')
         for row in data:
@@ -32,7 +34,8 @@ def create_dataframe():
                 
             except ValueError:
                 continue
-                
+    
+    # Combine lists into a pandas DataFrame
     df = pd.DataFrame(
         {
             "timestamp" : timestamp,
@@ -98,19 +101,12 @@ def analyze_group(df):
         "id" : [0],
         "success_percentage": success_percentage,
         "avg_querys_before_success": avg_querys_before_success,
-        "avg_elapsed_time_before_success": avg_elapsed_time_before_success,
+        "avg_elapsed_time_before_success": avg_elapsed_time_before_success/1000,
         "avg_query_length_diff": avg_query_length_diff,
         "avg_choice_rank": avg_choice_rank
     }
-               
-if __name__ == "__main__":
-    data = create_dataframe()
-    group_0 = data[data['experiment_group'] == 0]
-    group_1 = data[data['experiment_group'] == 1]
     
-    group_0_results = analyze_group(group_0)
-    group_1_results = analyze_group(group_1)
-    
+def plot_data(group_0_results, group_1_results):
     metrics = list(group_0_results.keys())[1:]  # Skip the "id"
     group_0_values = [group_0_results[metric] for metric in metrics]
     group_1_values = [group_1_results[metric] for metric in metrics]
@@ -142,7 +138,9 @@ if __name__ == "__main__":
     plt.savefig(PLOT_OUTPUT_FILE, format="pdf", dpi=300, bbox_inches='tight')
     # Show plot
     plt.show()
-    
+
+def write_report(group_0_results, group_1_results):
+    #Open output file and save analysis data
     with open(REPORT_OUTPUT_FILE, 'w') as file:
         file.write("Group 0: \n")
         file.write("Percentage of successful sessions: " + str(group_0_results['success_percentage']) + "\n")
@@ -157,3 +155,21 @@ if __name__ == "__main__":
         file.write("Average elapsed time in session before success: " + str(group_1_results['avg_elapsed_time_before_success']) + "\n")
         file.write("Average difference in query length between first and last query (in successful sessions): " + str(group_1_results['avg_query_length_diff']) + "\n")
         file.write("Average ranking of selected option: " + str(group_1_results['avg_choice_rank']) + "\n")
+
+if __name__ == "__main__":
+    # Create dataframes extracting data from the .csv file
+    data = create_dataframe()
+    group_0 = data[data['experiment_group'] == 0]
+    group_1 = data[data['experiment_group'] == 1]
+    
+    # Analyze the data
+    group_0_results = analyze_group(group_0)
+    group_1_results = analyze_group(group_1)
+    
+    # Plot
+    plot_data(group_0_results, group_1_results)
+    
+    # Write report
+    write_report(group_0_results, group_1_results)
+    
+    
