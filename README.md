@@ -1,11 +1,18 @@
 # Data review
 **time_epoch** - A timestamp of the event, stated in Unix time.
+
 **device_id** - unique device identifier
+
 **session_id** - unique session identifier (when combined with device_id)
+
 **event_index** - unique identifier of an event within a query, was renamed query_id in code
+
 **experimentGroup** - defines which experiment group the session belongs to, presumably referring to the model which was tested
+
 **queryLenght** - the length of the search query described with the number of characters
+
 **selectedIndexes** - Contains a value of null if no item has been selected within this event in the session (these events always have an 'event_id' of "searchRestarted"), and a list containing a single element referring to the index of the selected item if an item has been selected (these events always have an 'event_id' of "sessionFinished").
+
 **event_id** - Has one of two values; "searchRestarted" if the event within the session ended with the SE window updating (search query edited, additional filters added, etc.) and "sessionFinished" if the event ended with an item being selected (this is the outcome which we considered successful, assuming the user found what they were looking for). It is important to note that data portrays certain sessions ending without an item being selected. This suggests a need for a better data collection mechanism, or at least more specific values for the 'event_id' field, as the current ones offer limited insight.
 # Evaluation metrics
 placeholder
